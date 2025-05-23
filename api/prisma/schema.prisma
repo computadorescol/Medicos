@@ -1,0 +1,225 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../node_modules/.prisma/client" // Changed output path
+  binaryTargets = ["native", "rhel-openssl-1.0.x"] // Added binaryTargets
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // Vercel injects POSTGRES_PRISMA_URL or DATABASE_URL
+}
+
+model User {
+  id          String   @id @default(cuid())
+  firebaseUid String?  @unique // UID from Firebase Auth, optional if not all users are Firebase-managed
+  fullName    String
+  email       String   @unique
+  // password_hash String // Not storing password hash if Firebase Auth is primary for patients
+  age         Int?
+  gender      String?
+  phone       String?
+  role        UserRole @default(PATIENT) // PATIENT, ADMIN
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  consultations Consultation[]
+  transactions  Transaction[]
+
+  @@map("users")
+}
+
+model Doctor {
+  id                   String       @id @default(cuid())
+  firebaseUid          String       @unique // UID from Firebase Auth
+  fullName             String
+  email                String       @unique
+  // password_hash String // Handled by Firebase Auth
+  medicalLicenseNumber String
+  yearsOfExperience    Int
+  professionalBio      String?      @db.Text
+  status               DoctorStatus @default(PENDING_APPROVAL) // PENDING_APPROVAL, APPROVED, REJECTED
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  doctorSpecialties     DoctorSpecialty[]
+  consultationsAssigned Consultation[]         @relation("AssignedDoctorConsultations")
+  consultationResponses ConsultationResponse[]
+  credentials           DoctorCredential[]
+
+  @@map("doctors")
+}
+
+model Specialty {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  doctorSpecialties      DoctorSpecialty[]
+  consultationsRequested Consultation[]    @relation("RequestedSpecialtyConsultations")
+
+  @@map("specialties")
+}
+
+// Join table for Doctors and Specialties (many-to-many)
+model DoctorSpecialty {
+  doctorId    String
+  specialtyId Int
+  assignedAt  DateTime @default(now())
+  assignedBy  String? // Could be an admin ID or system
+
+  doctor    Doctor    @relation(fields: [doctorId], references: [id])
+  specialty Specialty @relation(fields: [specialtyId], references: [id])
+
+  @@id([doctorId, specialtyId])
+  @@map("doctor_specialties")
+}
+
+model Consultation {
+  id        String @id @default(cuid())
+  patientId String
+  patient   User   @relation(fields: [patientId], references: [id])
+
+  assignedDoctorId String?
+  assignedDoctor   Doctor? @relation("AssignedDoctorConsultations", fields: [assignedDoctorId], references: [id])
+
+  specialtyRequestedId Int?
+  specialtyRequested   Specialty? @relation("RequestedSpecialtyConsultations", fields: [specialtyRequestedId], references: [id])
+
+  description      String             @db.Text
+  status           ConsultationStatus @default(SUBMITTED) // SUBMITTED, ASSIGNED, ANSWERED, CLOSED
+  consultationType String // e.g., "basic", "priority", "follow_up"
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  responses   ConsultationResponse[]
+  attachments Attachment[]
+
+  @@map("consultations")
+}
+
+model ConsultationResponse {
+  id             String       @id @default(cuid())
+  consultationId String
+  consultation   Consultation @relation(fields: [consultationId], references: [id])
+
+  doctorId String
+  doctor   Doctor @relation(fields: [doctorId], references: [id])
+
+  responseText String   @db.Text
+  createdAt    DateTime @default(now())
+
+  attachments Attachment[]
+
+  @@map("consultation_responses")
+}
+
+model Attachment {
+  id         String   @id @default(cuid())
+  fileName   String
+  filePath   String // URL or path in blob storage
+  fileType   String // MIME type
+  uploadedAt DateTime @default(now())
+
+  consultationId String?
+  consultation   Consultation? @relation(fields: [consultationId], references: [id])
+
+  consultationResponseId String?
+  consultationResponse   ConsultationResponse? @relation(fields: [consultationResponseId], references: [id])
+
+  // To link uploader, you might need a polymorphic relation or separate fields
+  // For simplicity, let's assume uploader info is handled contextually or via a generic uploaderId
+  // uploaderId String 
+  // uploaderType String // "PATIENT" or "DOCTOR"
+
+  @@map("attachments")
+}
+
+model DoctorCredential {
+  id         String   @id @default(cuid())
+  doctorId   String
+  doctor     Doctor   @relation(fields: [doctorId], references: [id])
+  fileName   String
+  filePath   String // URL or path in blob storage
+  fileType   String // MIME type
+  uploadedAt DateTime @default(now())
+  verified   Boolean  @default(false)
+
+  @@map("doctor_credentials")
+}
+
+model PricingPlan {
+  id                String   @id @default(cuid()) // e.g., "basic_consult", "priority_consult"
+  name              String   @unique // "Consulta Básica", "Consulta Prioritaria"
+  price             Decimal // Store in smallest currency unit (e.g., cents) if possible, or use Decimal type
+  currency          String   @default("USD")
+  description       String?  @db.Text
+  responseTimeHours String? // e.g., "24-48", "6-12"
+  features          String[] // List of features as strings
+  active            Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  transactions Transaction[]
+
+  @@map("pricing_plans")
+}
+
+model Transaction {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  consultationId String? // Link to a specific consultation if applicable
+  // consultation Consultation? @relation(fields: [consultationId], references: [id]) // Causes cycle if Consultation also links Transaction
+
+  pricingPlanId String?
+  pricingPlan   PricingPlan? @relation(fields: [pricingPlanId], references: [id])
+
+  amount               Decimal
+  currency             String
+  paymentGateway       String // e.g., "paypal", "stripe"
+  gatewayTransactionId String            @unique
+  status               TransactionStatus @default(PENDING) // PENDING, COMPLETED, FAILED, REFUNDED
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  @@map("transactions")
+}
+
+// Enums
+enum UserRole {
+  PATIENT
+  ADMIN
+  // DOCTOR role is handled by the separate Doctor model linked via firebaseUid
+}
+
+enum DoctorStatus {
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum ConsultationStatus {
+  SUBMITTED
+  ASSIGNED
+  IN_PROGRESS // Doctor is working on it
+  ANSWERED
+  CLOSED // Patient has reviewed or time elapsed
+  CANCELLED
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}

@@ -1,0 +1,25 @@
+{
+  "name": "mediconsulta-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend API for MediConsulta Online",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"No build step defined\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/node": "^5.1.16",
+    "vercel": "^41.7.8"
+  },
+  "devDependencies": {
+    "@prisma/client": "^6.7.0",
+    "@types/next": "^8.0.7",
+    "@types/node": "^22.15.17",
+    "next": "^15.1.8",
+    "prisma": "^6.7.0"
+  }
+}
