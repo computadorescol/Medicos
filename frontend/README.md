@@ -1,54 +1,36 @@
-# React + TypeScript + Vite
+# Project Template: Online Professional Consultation Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a starter template for building an online consultation platform for any type of professional (doctors, lawyers, architects, etc). It includes:
 
-Currently, two official plugins are available:
+- **Frontend:** React + Vite + TypeScript
+- **Backend:** Node.js (Vercel serverless functions) + Prisma + PostgreSQL
+- **Authentication:** Firebase Auth (can be replaced)
+- **Database:** Prisma ORM (PostgreSQL)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## How to Use This Template
 
-## Expanding the ESLint configuration
+1. **Clone this repo y renombra la carpeta:**
+   - Cambia todos los nombres y rutas de "medicos" a tu dominio (ej: "abogados", "arquitectos").
+2. **Personaliza los modelos:**
+   - Edita `api/prisma/schema.prisma` para reflejar los campos de tu profesional (ej: especialidad, licencia, etc).
+3. **Ajusta los endpoints:**
+   - Cambia los nombres de endpoints y lógica en `api/` (ej: `/api/doctors` → `/api/professionals`).
+4. **Actualiza el frontend:**
+   - Cambia los textos, formularios y componentes en `frontend/src/components/` para tu dominio.
+5. **Configura Firebase Auth o tu sistema de autenticación preferido.**
+6. **Lee los comentarios en el código para más instrucciones.**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Estructura de Carpetas
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- `api/` - Backend (serverless functions, Prisma, endpoints REST)
+- `frontend/` - Frontend (React, componentes, hooks)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Ejemplo de Personalización
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Cambia `Doctor` por `Professional` en todos los archivos.
+- Cambia `/api/doctors` por `/api/professionals`.
+- Cambia los campos de perfil según tu necesidad.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+---
+
+**¡Listo para usar en cualquier vertical de servicios profesionales!**

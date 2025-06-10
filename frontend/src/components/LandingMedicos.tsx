@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 interface Doctor {
   id: string;
@@ -10,6 +11,7 @@ interface Doctor {
 const LandingMedicos: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const navigate = useNavigate();
+  const { user } = useAuth(); // Get the authenticated user
 
   useEffect(() => {
     // Simulación de imágenes de médicos (sin base de datos)
@@ -53,7 +55,11 @@ const LandingMedicos: React.FC = () => {
   }, []);
 
   const handleDoctorClick = (doctor: Doctor) => {
-    navigate(`/doctor/${doctor.id}`);
+    if (user?.uid) {
+      navigate(`/nueva-consulta?doctorId=${doctor.id}&patientId=${user.uid}`);
+    } else {
+      console.error('User is not authenticated');
+    }
   };
 
   return (

@@ -3,10 +3,16 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Cambia este archivo para tu dominio: cliente, usuario, etc.
+
 export default async function handler(
   request: VercelRequest,
   response: VercelResponse,
 ) {
+  // Ejemplo: POST para crear un cliente
+  // GET para listar clientes
+  // Personaliza los campos y lógica según tu dominio
+
   if (request.method === 'POST') {
     try {
       const {

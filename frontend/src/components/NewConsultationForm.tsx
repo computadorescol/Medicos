@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 interface FormData {
   fullName: string;
@@ -9,12 +10,11 @@ interface FormData {
   consultationText: string;
 }
 
-interface NewConsultationFormProps {
-  patientId: string;
-  assignedDoctorId: string;
-}
+const NewConsultationForm: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const patientId = searchParams.get('patientId') || '';
+  const assignedDoctorId = searchParams.get('doctorId') || '';
 
-const NewConsultationForm: React.FC<NewConsultationFormProps> = ({ patientId, assignedDoctorId }) => {
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
     email: '',
@@ -26,6 +26,9 @@ const NewConsultationForm: React.FC<NewConsultationFormProps> = ({ patientId, as
   const [error, setError] = useState<string | null>(null);
 
   const MAX_WORDS = 500;
+
+  // Log para confirmar que los IDs se obtienen correctamente desde la URL
+  console.log('IDs obtenidos desde la URL:', { patientId, assignedDoctorId });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -46,6 +49,12 @@ const NewConsultationForm: React.FC<NewConsultationFormProps> = ({ patientId, as
       alert(`La consulta no puede exceder las ${MAX_WORDS} palabras.`);
       return;
     }
+    // Log para depuración: revisa los IDs y el texto antes de enviar
+    console.log('Enviando consulta:', {
+      patientId,
+      assignedDoctorId,
+      description: formData.consultationText
+    });
     setLoading(true);
     setError(null);
     setSuccess(false);
@@ -148,20 +157,42 @@ const NewConsultationForm: React.FC<NewConsultationFormProps> = ({ patientId, as
           />
         </div>
         <div>
-          <label htmlFor="consultationText">Describa su consulta o síntomas (Máx. {MAX_WORDS} palabras):*</label>
+          <label htmlFor="consultationText">escribe tu consulta o síntomas (Máx. {MAX_WORDS} palabras):*</label>
           <textarea
             id="consultationText"
             name="consultationText"
             value={formData.consultationText}
             onChange={handleChange}
             rows={8}
-            placeholder="Describa sus síntomas, desde cuándo los tiene, tratamientos previos, alergias, medicamentos actuales y cualquier información médica relevante..."
+            placeholder="escribe tus síntomas, desde cuándo los tiene, tratamientos previos, alergias, medicamentos actuales y cualquier información médica relevante..."
             required
             style={{ width: '100%', padding: '8px', margin: '8px 0', boxSizing: 'border-box' }}
           />
           <div style={{ textAlign: 'right', fontSize: '0.9em', color: wordCount > MAX_WORDS ? 'red' : '#555' }}>
             Palabras: {wordCount} / {MAX_WORDS}
           </div>
+        </div>
+        <div>
+          <label htmlFor="patientId">ID del Paciente:*</label>
+          <input
+            type="text"
+            id="patientId"
+            name="patientId"
+            value={patientId}
+            readOnly
+            style={{ width: '100%', padding: '8px', margin: '8px 0', boxSizing: 'border-box', backgroundColor: '#f5f5f5' }}
+          />
+        </div>
+        <div>
+          <label htmlFor="assignedDoctorId">ID del Doctor Asignado:*</label>
+          <input
+            type="text"
+            id="assignedDoctorId"
+            name="assignedDoctorId"
+            value={assignedDoctorId}
+            readOnly
+            style={{ width: '100%', padding: '8px', margin: '8px 0', boxSizing: 'border-box', backgroundColor: '#f5f5f5' }}
+          />
         </div>
         <button 
           type="submit" 

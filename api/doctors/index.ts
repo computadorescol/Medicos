@@ -3,10 +3,16 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Cambia este archivo para tu dominio: profesional, cliente, cita, etc.
+
 export default async function handler(
   request: VercelRequest,
   response: VercelResponse,
 ) {
+  // Ejemplo: POST para crear un profesional
+  // GET para listar profesionales
+  // Personaliza los campos y lógica según tu dominio
+
   if (request.method === 'POST') {
     try {
       const { 
@@ -21,7 +27,7 @@ export default async function handler(
 
       // Validación básica
       if (!firebaseUid || !fullName || !email || !medicalLicenseNumber || !yearsOfExperience || !specialty) {
-        return response.status(400).json({ error: 'Faltan campos obligatorios.' });
+        return response.status(400).json({ error: 'llenar  campos obligatorios.' });
       }
 
       const newDoctor = await prisma.doctor.create({

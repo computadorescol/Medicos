@@ -1,4 +1,6 @@
+import { loadStripe } from '@stripe/stripe-js';
 import React from 'react';
+import PayConsultation from './PayConsultation'; // Import the PayConsultation component
 
 // Placeholder data for pricing tiers
 const pricingTiers = [
@@ -42,6 +44,48 @@ const paymentMethods = [
 
 const PricingPage: React.FC = () => {
   // Basic inline styles - can be replaced with CSS classes if/when styling system is in place
+
+  
+const handleCheckout = async (tierId: string, price: string) => {
+   try {
+     // 1. Create a Stripe Checkout Session on the server.
+     const response = await fetch('/api/create-checkout-session', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify({
+         tierId: tierId,
+         price: price,
+       }),
+     });
+
+     if (!response.ok) {
+       const errorData = await response.json();
+       throw new Error(errorData.message || 'Failed to create checkout session');
+     }
+
+     const session = await response.json();
+
+     // 2. Redirect to Checkout.
+     const stripe = await loadStripe('pk_test_51Hxxxxxxxxxxxxxxxxxxxxxxxx'); // Replace with your actual key
+     if (!stripe) {
+       throw new Error('Stripe failed to load');
+     }
+     const { error } = await stripe.redirectToCheckout({
+       sessionId: session.id,
+     });
+
+     // 3. If `redirectToCheckout` fails due to network issues, display the error.
+     if (error) {
+       console.error(error);
+       alert(error.message); // Or display the error in a user-friendly way
+     }
+   } catch (error: any) {
+     console.error(error);
+     alert(error.message || 'An unexpected error occurred.'); // Or display the error in a user-friendly way
+   }
+ };
   const styles = {
     container: { maxWidth: '900px', margin: '20px auto', padding: '20px', fontFamily: 'Arial, sans-serif' },
     header: { textAlign: 'center' as 'center', marginBottom: '40px' },
@@ -58,9 +102,21 @@ const PricingPage: React.FC = () => {
     paymentList: { listStyle: 'none', padding: 0, display: 'flex', gap: '15px', flexWrap: 'wrap' as 'wrap' },
     paymentLink: { textDecoration: 'none', color: '#007bff', padding: '8px 12px', border: '1px solid #007bff', borderRadius: '4px', transition: 'background-color 0.2s, color 0.2s' },
     // Add hover style for paymentLink if needed, e.g. by managing state or using CSS classes
+
     refundPolicy: { fontSize: '0.9em', color: '#555', marginBottom: '20px', borderTop: '1px solid #eee', paddingTop: '20px' },
     note: { fontSize: '0.8em', color: '#777', fontStyle: 'italic' as 'italic', marginTop: '20px', textAlign: 'center' as 'center' },
+    payButton: {
+      backgroundColor: '#007bff',
+      color: 'white',
+      padding: '10px 20px',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      fontSize: '1em',
+      marginTop: '15px',
+    },
   };
+
 
   return (
     <div style={styles.container}>
@@ -72,20 +128,25 @@ const PricingPage: React.FC = () => {
         {pricingTiers.map((tier) => (
           <div key={tier.id} style={styles.tierCard}>
             <h3 style={styles.tierName}>
+
               {tier.name}
               {tier.comingSoon && <span style={styles.comingSoonBadge}>Próximamente</span>}
             </h3>
+            <PayConsultation tierId={tier.id} price={tier.price} />
+           
             <p style={styles.tierPrice}>{tier.price}</p>
             <p style={styles.tierDescription}>{tier.description}</p>
             <ul style={styles.tierFeature}>
               {tier.features.map((feature, index) => (
                 <li key={index}>✓ {feature}</li>
               ))}
-            </ul>
-            {/* Add a "Select Plan" button here if needed */}
+            <button style={styles.payButton} onClick={() => handleCheckout(tier.id, tier.price)}>los 3</button>
+              
+              <button style={styles.payButton} onClick={() => handleCheckout(tier.id, tier.price)}>los 3</button></ul>
+                
+          <button style={styles.payButton} onClick={() => handleCheckout(tier.id, tier.price)}>los 3</button>
           </div>
-        ))}
-      </div>
+              ))}
 
       <section style={styles.paymentSection}>
         <h3 style={styles.paymentTitle}>Métodos de Pago Aceptados</h3>
@@ -97,7 +158,7 @@ const PricingPage: React.FC = () => {
               </a>
             </li>
           ))}
-        </ul>
+          </ul>
         <p style={{fontSize: '0.9em', color: '#555', marginTop: '10px'}}>
           Serás redirigido a la plataforma de pago correspondiente.
         </p>
@@ -114,8 +175,9 @@ const PricingPage: React.FC = () => {
       <p style={styles.note}>
         Nota: Los precios pueden variar según la especialidad del médico consultado y están sujetos a cambios.
       </p>
-    </div>
+          </div>
+          </div>
   );
 };
 
-export default PricingPage;
+export default PricingPage
