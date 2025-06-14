@@ -15,8 +15,12 @@ jobs:
       - name: Build and Deploy
         uses: JamesIves/github-pages-deploy-action@master
         env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          API_GOOGLE_MAP: ${{ secrets.API_GOOGLE_MAP }}
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
+          VERCEL_OIDC_TOKEN: ${{secrets.VERCEL_OIDC_TOKEN}}
+          VITE_STRIPE_PUBLISHABLE_KEY: ${{secrets.VITE_STRIPE_PUBLISHABLE_KEY}}
+          VITE_STRIPE_PRICE_ID: ${{secrets.VITE_STRIPE_PRICE_ID}}
+          ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN }}
+          API_GOOGLE_MAP: ${{secrets.API_GOOGLE_MAP }}
           BRANCH: gh-pages
           FOLDER: public
           BUILD_SCRIPT: yarn && yarn run build

@@ -4,7 +4,7 @@ export default function handler(
   request: VercelRequest,
   response: VercelResponse,
 ) {
-  const { name = 'World' } = request.query;
+  const { name = 'World carlos julio' } = request.query;
   response.status(200).json({
     message: `Hello today , ${name}!`,
     timestamp: new Date().toISOString(),
