@@ -20,7 +20,7 @@ jobs:
           VITE_STRIPE_PUBLISHABLE_KEY: ${{secrets.VITE_STRIPE_PUBLISHABLE_KEY}}
           VITE_STRIPE_PRICE_ID: ${{secrets.VITE_STRIPE_PRICE_ID}}
           ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN }}
-          API_GOOGLE_MAP: ${{secrets.API_GOOGLE_MAP }}
+          
           BRANCH: gh-pages
           FOLDER: public
           BUILD_SCRIPT: yarn && yarn run build
