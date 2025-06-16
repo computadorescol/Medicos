@@ -1,0 +1,26 @@
+name: Build and Deploy to GitHub Pages on Push
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Build and Deploy
+        uses: JamesIves/github-pages-deploy-action@master
+        env:
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
+          VERCEL_OIDC_TOKEN: ${{secrets.VERCEL_OIDC_TOKEN}}
+          VITE_STRIPE_PUBLISHABLE_KEY: ${{secrets.VITE_STRIPE_PUBLISHABLE_KEY}}
+          VITE_STRIPE_PRICE_ID: ${{secrets.VITE_STRIPE_PRICE_ID}}
+          ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN }}
+          
+          BRANCH: gh-pages
+          FOLDER: public
+          BUILD_SCRIPT: yarn && yarn run build
