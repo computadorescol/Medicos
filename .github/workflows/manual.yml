@@ -1,9 +1,10 @@
 name: Build and Deploy to GitHub Pages on Push
 
 on:
-  push:
+  workflow_dispatch:
     branches:
-      - master
+      - main
+  
 
 jobs:
   build-and-deploy:

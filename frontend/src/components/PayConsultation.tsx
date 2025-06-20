@@ -1,5 +1,5 @@
 import React from 'react';
-import getStripe from '/lib/getStripe.js';
+import getStripe from '.././lib/getStripe.js';
 
 const PayConsultation: React.FC<{ tierId: string; price: string }> = ({ tierId, price }) => {
   async function handleCheckout() {
