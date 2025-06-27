@@ -21,6 +21,13 @@ const DoctorProfileWithConsultWrapper: React.FC = () => {
   return <DoctorProfileWithConsult doctorId={doctorId} />;
 };
 
+// Ruta para nueva consulta con patientId dinámico desde la URL
+const NuevaConsultaWrapper: React.FC = () => {
+  const { patientId } = useParams();
+  // Puedes agregar lógica para obtener assignedDoctorId si es necesario
+  return <NewConsultationForm patientId={patientId || ''} assignedDoctorId={''} />;
+};
+
 // Componente para rutas protegidas
 // (Eliminado porque no se usa actualmente)
 
@@ -52,7 +59,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/login-paciente" element={<PatientAuth />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/nueva-consulta" element={<NewConsultationForm patientId={''} assignedDoctorId={''} />} />
+          <Route path="/nueva-consulta/:patientId" element={<NuevaConsultaWrapper />} />
           <Route path="/landing-medicos" element={<LandingMedicos />} />
           <Route path="/register-doctor" element={<DoctorRegistrationForm />} />
           <Route path="/pricing" element={<PricingPage />} />
