@@ -132,18 +132,14 @@ const handleCheckout = async (tierId: string, price: string) => {
               {tier.name}
               {tier.comingSoon && <span style={styles.comingSoonBadge}>Próximamente</span>}
             </h3>
-            {/* <PayConsultation tierId={tier.id} price={tier.price} /> */}
+            <PayConsultation />
             <p style={styles.tierPrice}>{tier.price}</p>
             <p style={styles.tierDescription}>{tier.description}</p>
             <ul style={styles.tierFeature}>
               {tier.features.map((feature, index) => (
                 <li key={index}>✓ {feature}</li>
               ))}
-            <button style={styles.payButton} onClick={() => handleCheckout(tier.id, tier.price)}>los 3</button>
-              
-              <button style={styles.payButton} onClick={() => handleCheckout(tier.id, tier.price)}>los 3</button></ul>
-                
-          <button style={styles.payButton} onClick={() => handleCheckout(tier.id, tier.price)}>los 3</button>
+            </ul>
           </div>
               ))}
 
