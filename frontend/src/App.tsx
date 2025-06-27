@@ -7,7 +7,7 @@ import Login from './components/Login';
 import AuthDetails from './components/AuthDetails';
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
-import NewConsultationForm from './components/NewConsultationForm'; // Import the new form
+//import NewConsultationForm from './components/NewConsultationForm'; // Import the new form
 import DoctorRegistrationForm from './components/DoctorRegistrationForm'; // Import doctor registration form
 import PricingPage from './components/PricingPage'; // Import the pricing page
 import LandingMedicos from './components/LandingMedicos'; // Import LandingMedicos

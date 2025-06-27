@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 const DoctorProfileWithConsult: React.FC<{ doctorId: string }> = ({ doctorId }) => {
   const { user } = useAuth();
   const [showForm, setShowForm] = useState(false);
-  // Removed unused doctorName state
   const navigate = useNavigate();
 
   if (!user) return (
@@ -26,7 +25,7 @@ const DoctorProfileWithConsult: React.FC<{ doctorId: string }> = ({ doctorId }) 
         }}
       />
       {showForm && (
-        <NewConsultationForm patientId={user.uid} assignedDoctorId={doctorId} />
+        <NewConsultationForm />
       )}
     </div>
   );
