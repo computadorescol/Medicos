@@ -1,10 +1,14 @@
 import React from 'react';
 import getStripe from '../lib/getStripe';
 
-const PayConsultation: React.FC<{ tierId: string; price: string }> = ({ tierId, price }) => {
+const PayConsultation: React.FC = () => {
   async function handleCheckout() {
     console.log('Stripe Price ID:', import.meta.env.VITE_STRIPE_PRICE_ID); // Debugging log
     const stripe = await getStripe();
+    if (!stripe) {
+      alert('Stripe no se pudo inicializar.');
+      return;
+    }
     const { error } = await stripe.redirectToCheckout({
       lineItems: [
         {
@@ -17,41 +21,10 @@ const PayConsultation: React.FC<{ tierId: string; price: string }> = ({ tierId, 
       cancelUrl: `http://localhost:3000/cancel`,
       customerEmail: 'customer@email.com',
     });
-    console.warn(error.message);
-  }
-  const handleCheckout1 = async () => {
-    try {
-      // 1. Create a Stripe Checkout Session on the server.
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tierId: tierId,
-          price: price,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text(); // Read the response as text
-        try {
-          const errorData = JSON.parse(errorText); // Try parsing as JSON
-          throw new Error(errorData.message || 'Failed to create checkout session');
-        } catch {
-          throw new Error(errorText || 'Failed to create checkout session');
-        }
-      }
-
-      const session = await response.json();
-
-      // 2. Redirect to the Checkout URL.
-      window.location.href = session.url;
-    } catch (error: any) {
-      console.error(error);
-      alert(error.message || 'An unexpected error occurred.'); // Or display the error in a user-friendly way
+    if (error) {
+      console.warn(error.message);
     }
-  };
+  }
 
   return (
     <div>
