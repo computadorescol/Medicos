@@ -132,8 +132,7 @@ const handleCheckout = async (tierId: string, price: string) => {
               {tier.name}
               {tier.comingSoon && <span style={styles.comingSoonBadge}>Próximamente</span>}
             </h3>
-            <PayConsultation tierId={tier.id} price={tier.price} />
-           
+            {/* <PayConsultation tierId={tier.id} price={tier.price} /> */}
             <p style={styles.tierPrice}>{tier.price}</p>
             <p style={styles.tierDescription}>{tier.description}</p>
             <ul style={styles.tierFeature}>
