@@ -140,6 +140,14 @@ const handleCheckout = async (tierId: string, price: string) => {
                 <li key={index}>✓ {feature}</li>
               ))}
             </ul>
+            {!tier.comingSoon && (
+              <button
+                style={styles.payButton}
+                onClick={() => handleCheckout(tier.id, tier.price)}
+              >
+                Pagar
+              </button>
+            )}
           </div>
               ))}
 
