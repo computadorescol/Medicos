@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, {useEffect,  useState } from 'react';
+import { useSearchParams , useLocation} from 'react-router-dom';
+
 
 interface FormData {
   fullName: string;
@@ -14,6 +15,7 @@ const NewConsultationForm: React.FC = () => {
   const [searchParams] = useSearchParams();
   const patientId = searchParams.get('patientId') || '';
   const assignedDoctorId = searchParams.get('doctorId') || '';
+  const location = useLocation();
 
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
@@ -26,6 +28,17 @@ const NewConsultationForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const MAX_WORDS = 500;
+
+  useEffect ( ( ) => {
+  const params = new URLSearchParams(location.search); // O window.location.search si no usas R      eact Router
+    const patientId = params.get('patientId');
+    const parentComponent = params.get('parentComponent');
+
+    console.log('Patient ID:', patientId);
+    console.log('Parent Component:', parentComponent);
+
+    // Usa patientId y parentComponent para renderizar tu formulario
+  }, [location.search]); // Dependencia para React Router
 
   // Log para confirmar que los IDs se obtienen correctamente desde la URL
   console.log('IDs obtenidos desde la URL:', { patientId, assignedDoctorId });
@@ -62,6 +75,7 @@ const NewConsultationForm: React.FC = () => {
       const res = await fetch('/api/appointments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+
         body: JSON.stringify({
           patientId,
           assignedDoctorId,

@@ -46,46 +46,48 @@ const PricingPage: React.FC = () => {
   // Basic inline styles - can be replaced with CSS classes if/when styling system is in place
 
   
-const handleCheckout = async (tierId: string, price: string) => {
-   try {
-     // 1. Create a Stripe Checkout Session on the server.
-     const response = await fetch('/api/create-checkout-session', {
-       method: 'POST',
-       headers: {
-         'Content-Type': 'application/json',
-       },
-       body: JSON.stringify({
-         tierId: tierId,
-         price: price,
-       }),
-     });
+const handleCheckout = async (tierId: string, price: string  ) => {
+  try {
+    // Extraer solo el número del precio (ej: "25 USD" -> 25)
+    const numericPrice = parseFloat(price.replace(/[^\d.]/g, ''));
+    // 1. Create a Stripe Checkout Session on the server.
+    const response = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tierId: tierId,
+        price: numericPrice,
+      }),
+    });
 
-     if (!response.ok) {
-       const errorData = await response.json();
-       throw new Error(errorData.message || 'Failed to create checkout session');
-     }
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to create checkout session');
+    }
 
-     const session = await response.json();
+    const session = await response.json();
 
-     // 2. Redirect to Checkout.
-     const stripe = await loadStripe('pk_test_51Hxxxxxxxxxxxxxxxxxxxxxxxx'); // Replace with your actual key
-     if (!stripe) {
-       throw new Error('Stripe failed to load');
-     }
-     const { error } = await stripe.redirectToCheckout({
-       sessionId: session.id,
-     });
+    // 2. Redirect to Checkout.
+    const stripe = await loadStripe('pk_test_51Hxxxxxxxxxxxxxxxxxxxxxxxx'); // Replace with your actual key
+    if (!stripe) {
+      throw new Error('Stripe failed to load');
+    }
+    const { error } = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
 
-     // 3. If `redirectToCheckout` fails due to network issues, display the error.
-     if (error) {
-       console.error(error);
-       alert(error.message); // Or display the error in a user-friendly way
-     }
-   } catch (error: any) {
-     console.error(error);
-     alert(error.message || 'An unexpected error occurred.'); // Or display the error in a user-friendly way
-   }
- };
+    // 3. If `redirectToCheckout` fails due to network issues, display the error.
+    if (error) {
+      console.error(error);
+      alert(error.message); // Or display the error in a user-friendly way
+    }
+  } catch (error: any) {
+    console.error(error);
+    alert(error.message || 'An unexpected error occurred.'); // Or display the error in a user-friendly way
+  }
+};
   const styles = {
     container: { maxWidth: '900px', margin: '20px auto', padding: '20px', fontFamily: 'Arial, sans-serif' },
     header: { textAlign: 'center' as 'center', marginBottom: '40px' },

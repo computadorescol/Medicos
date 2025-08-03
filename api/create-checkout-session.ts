@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
+import NewConsultationForm from '../../NewConsultationForm.tsx';
+//import Success from './components/Success.tsx';
 
 dotenv.config();
 
@@ -46,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         ],
         mode: 'payment',
-        success_url: `${req.headers.origin}/success?session_id={CHECKOUT_SESSION_ID}`, // Replace with your success URL
+        success_url: `${req.headers.origin}/?session_id={CHECKOUT_SESSION_ID}`, // Replace with your success URL 
         cancel_url: `${req.headers.origin}/cancel`, // Replace with your cancel URL
       });
 
