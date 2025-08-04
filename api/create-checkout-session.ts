@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
-import NewConsultationForm from '../../NewConsultationForm.tsx';
+//import NewConsultationForm from '../../NewConsultationForm.tsx';
 //import Success from './components/Success.tsx';
 
 dotenv.config();

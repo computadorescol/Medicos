@@ -26,9 +26,8 @@ const DoctorProfileWithConsultWrapper: React.FC = () => {
 
 // Wrapper para extraer el patientId de la URL y pasar a NewConsultationForm
 const NuevaConsultaWrapper: React.FC = () => {
-  const { patientId } = useParams();
-  if (!patientId) return <div>Paciente no encontrado</div>;
-  return <NewConsultationForm  />;
+  const { patientId } = useParams<{ patientId: string }>();
+  return <NewConsultationForm />;
 };
 
 // Componente para rutas protegidas
@@ -45,7 +44,7 @@ function App() {
         <nav style={{ marginTop: '1rem' }}>
           <Link to="/" style={{ marginRight: '1rem' }}>Inicio</Link>
           <Link to="/dashboard" style={{ marginRight: '1rem' }}>Dashboard</Link>
-          <Link to="/nueva-consulta" style={{ marginRight: '1rem' }}>Nueva Consulta</Link>
+          <Link to="/nueva-consulta/:patientId" style={{ marginRight: '1rem' }}>Nueva Consulta</Link>
           <Link to="/login-paciente" style={{ marginRight: '1rem' }}>Ingreso Paciente</Link>
           <Link to="/landing-medicos" style={{ marginRight: '1rem' }}>Lista Médicos</Link>
           <Link to="/register-doctor" style={{ marginRight: '1rem' }}>Soy Médico</Link>
@@ -62,8 +61,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/login-paciente" element={<PatientAuth />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/nueva-consulta/:patientId" element={<NuevaConsultaWrapper />} /> 
-          <Route path="/nueva-consulta" element={<NewConsultationForm />} /> 
+          <Route path="/nueva-consulta/:patientId/:patientId" element={<NuevaConsultaWrapper />} /> 
+          <Route path="/nueva-consulta/:patientId" element={<NewConsultationForm />} /> 
           <Route path="/landing-medicos" element={<LandingMedicos />} />
           <Route path="/register-doctor" element={<DoctorRegistrationForm />} />
           <Route path="/pricing" element={<PricingPage />} />

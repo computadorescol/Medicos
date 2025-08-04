@@ -4,10 +4,9 @@ import getStripe from '../lib/getStripe';
 
 interface PayConsultationProps {
   patientId: string;
-   parentComponent?: string;   //agregamos la prop q se va a pasar como component parent
 }
                                   //destructuramos
-const PayConsultation: React.FC<PayConsultationProps> = ({ patientId ,parentComponent }) => {
+const PayConsultation: React.FC<PayConsultationProps> = ({ patientId }) => {
   async function handleCheckout() {
     console.log('Stripe Price ID:', import.meta.env.VITE_STRIPE_PRICE_ID); // Debugging log
     const stripe = await getStripe();
