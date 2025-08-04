@@ -9,6 +9,7 @@ interface FormData {
   gender?: string;
   phone?: string;
   consultationText: string;
+  
 }
 
 const NewConsultationForm: React.FC = () => {

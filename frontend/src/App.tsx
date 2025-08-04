@@ -28,7 +28,7 @@ const DoctorProfileWithConsultWrapper: React.FC = () => {
 const NuevaConsultaWrapper: React.FC = () => {
   const { patientId } = useParams();
   if (!patientId) return <div>Paciente no encontrado</div>;
-  return <NewConsultationForm patientId={patientId} />;
+  return <NewConsultationForm  />;
 };
 
 // Componente para rutas protegidas
