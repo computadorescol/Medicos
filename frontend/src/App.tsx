@@ -62,7 +62,7 @@ function App() {
           <Route path="/login-paciente" element={<PatientAuth />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/nueva-consulta/:patientId/:patientId" element={<NuevaConsultaWrapper />} /> 
-          <Route path="/nueva-consulta/:patientId" element={<NewConsultationForm />} /> 
+          <Route path="/nueva-consulta" element={<NewConsultationForm />} /> 
           <Route path="/landing-medicos" element={<LandingMedicos />} />
           <Route path="/register-doctor" element={<DoctorRegistrationForm />} />
           <Route path="/pricing" element={<PricingPage />} />
