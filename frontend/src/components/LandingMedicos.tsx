@@ -61,7 +61,7 @@ const LandingMedicos: React.FC = () => {
   }, []);
 
   const handleDoctorClick = (doctor: Doctor) => {
-    navigate('/pricing');
+    navigate('/pricing')
   };
 
   return (
