@@ -1,3 +1,4 @@
+
 /// <reference types="react" />
 import React from 'react';
 import { Routes, Route, Link, useParams } from 'react-router-dom';
@@ -26,7 +27,7 @@ const DoctorProfileWithConsultWrapper: React.FC = () => {
 
 // Wrapper para extraer el patientId de la URL y pasar a NewConsultationForm
 const NuevaConsultaWrapper: React.FC = () => {
-  const { patientId } = useParams<{ patientId: string }>();
+  //const { patientId } = useParams<{ patientId: string }>();
   return <NewConsultationForm />;
 };
 
