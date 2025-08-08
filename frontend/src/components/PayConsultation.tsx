@@ -6,7 +6,7 @@ interface PayConsultationProps {
   patientId: string;
 }
                                   //destructuramos
-const PayConsultation: React.FC<PayConsultationProps> = ({ patientId }) => {
+const PayConsultation: React.FC<PayConsultationProps> = ({  }) => {
   async function handleCheckout() {
     console.log('Stripe Price ID:', import.meta.env.VITE_STRIPE_PRICE_ID); // Debugging log
     const stripe = await getStripe();
